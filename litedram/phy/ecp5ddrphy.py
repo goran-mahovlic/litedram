@@ -191,13 +191,14 @@ class ECP5DDRPHY(Module, AutoCSR):
             clk_pattern = {0: 0b1010, 1: 0b0101}[clk_polarity]
             for i in range(len(pads.clk_p)):
                 pad_oddrx2f = Signal()
-                self.specials += Instance("ODDRX2F",
-                    i_RST  = ResetSignal("sys"),
-                    i_SCLK = ClockSignal("sys"),
-                    i_ECLK = ClockSignal("sys2x"),
-                    **{f"i_D{n}": (clk_pattern >> n) & 0b1 for n in range(4)},
-                    o_Q    = pad_oddrx2f
-                )
+                self.comb += pads.dm[i].eq(0)
+                #self.specials += Instance("ODDRX2F",
+                #    i_RST  = ResetSignal("sys"),
+                #    i_SCLK = ClockSignal("sys"),
+                #    i_ECLK = ClockSignal("sys2x"),
+                #    **{f"i_D{n}": (clk_pattern >> n) & 0b1 for n in range(4)},
+                #    o_Q    = pad_oddrx2f
+                #)
                 self.specials += Instance("DELAYG",
                     p_DEL_VALUE = cmd_delay,
                     i_A         = pad_oddrx2f,
